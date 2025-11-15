@@ -9,7 +9,6 @@
 
 **Una aplicación web gamificada que convierte tus tareas diarias en un hermoso jardín virtual** 🌻
 
-[Demo en Vivo](#) · [Reportar Bug](#) · [Solicitar Feature](#)
 
 </div>
 
