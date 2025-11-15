@@ -1,0 +1,215 @@
+.plant-cell {
+  position: relative;
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, #8B7355 0%, #A0826D 100%);
+  border: 3px solid #6B5344;
+  border-radius: 8px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plant-cell:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.plant-cell.empty {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.plant-cell.empty:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Parcela de tierra */
+.soil-patch {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Sprite de la planta */
+.plant-sprite {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.plant-emoji {
+  font-size: 3rem;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+  animation: gentle-sway 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Estados de la planta */
+.plant-cell.seed .plant-emoji {
+  font-size: 1.5rem;
+  opacity: 0.8;
+}
+
+.plant-cell.growing .plant-emoji {
+  font-size: 2.5rem;
+  animation: growing-pulse 2s ease-in-out infinite;
+}
+
+.plant-cell.mature .plant-emoji {
+  font-size: 3.5rem;
+  animation: mature-bounce 1s ease-in-out infinite;
+}
+
+.plant-cell.withered .plant-emoji {
+  font-size: 2rem;
+  opacity: 0.5;
+  filter: grayscale(100%) drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+  animation: withered-droop 2s ease-in-out infinite;
+}
+
+/* Planta lista para cosechar */
+.plant-cell.harvestable {
+  border-color: #FFD700;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  animation: glow-pulse 2s ease-in-out infinite;
+  cursor: pointer;
+}
+
+.plant-cell.harvestable:hover {
+  border-color: #FFC700;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+  transform: translateY(-6px) scale(1.05);
+}
+
+/* Indicador de cosecha */
+.harvest-indicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  z-index: 10;
+  animation: float 2s ease-in-out infinite;
+}
+
+.sparkle {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+}
+
+/* Badge de rutina */
+.recurring-badge {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 5;
+  background: rgba(76, 175, 80, 0.9);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Indicador de crecimiento */
+.growth-indicator {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+  z-index: 5;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+.growth-bar {
+  height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 2px;
+}
+
+.growth-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50 0%, #8BC34A 100%);
+  transition: width 0.5s ease;
+}
+
+.growth-text {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #555;
+  display: block;
+  text-align: center;
+}
+
+/* Animaciones */
+@keyframes gentle-sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+@keyframes growing-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes mature-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes withered-droop {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(3px) rotate(-5deg); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+  50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .plant-emoji {
+    font-size: 2rem;
+  }
+  
+  .plant-cell.seed .plant-emoji {
+    font-size: 1rem;
+  }
+  
+  .plant-cell.growing .plant-emoji {
+    font-size: 1.8rem;
+  }
+  
+  .plant-cell.mature .plant-emoji {
+    font-size: 2.5rem;
+  }
+  
+  .soil-patch {
+    font-size: 2rem;
+  }
+}

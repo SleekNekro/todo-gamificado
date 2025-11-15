@@ -1,0 +1,154 @@
+.garden-view {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.garden-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.garden-header h2 {
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+}
+
+.garden-subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.garden-info {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.info-badge {
+  background: white;
+  padding: 0.75rem 1.25rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.info-badge:hover {
+  transform: translateY(-2px);
+}
+
+.info-badge.harvest-ready {
+  background: linear-gradient(135deg, #FFF9C4 0%, #FFD700 100%);
+  color: #856404;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.info-badge.withered {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.empty-garden {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.empty-icon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-garden h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.empty-garden p {
+  color: #666;
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.empty-garden .hint {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #e8f5e9;
+  border-radius: 8px;
+  color: #2e7d32;
+  display: inline-block;
+}
+
+/* Lista detallada */
+.plant-details-section {
+  margin-top: 2rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.plant-details-section summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #2c3e50;
+  padding: 0.5rem;
+  user-select: none;
+}
+
+.plant-details-section summary:hover {
+  color: #4CAF50;
+}
+
+.plant-detail-list {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.plant-detail-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.detail-emoji {
+  font-size: 2rem;
+}
+
+.detail-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-info strong {
+  color: #2c3e50;
+}
+
+.detail-meta {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Animaciones */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.6);
+  }
+}
