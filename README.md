@@ -253,7 +253,7 @@ Distribuido bajo la Licencia MIT. Ver `LICENSE` para más información.
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshots -- Pronto
 
 ### Jardín Principal
 ![Jardín](https://via.placeholder.com/800x400?text=Captura+del+Jardín)
