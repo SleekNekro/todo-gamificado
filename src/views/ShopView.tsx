@@ -1,37 +1,65 @@
-import "../styles/ShopView.css"
+import { getPlantInfo } from '../data/plants';
+import { TaskType } from '../types/taskTypes';
+import type { ShopItem } from '../types/shop';
+import InventoryPanel from '../components/shop/InventoryPanel';
+import ShopCatalog from '../components/shop/ShopCatalog';
+import '../styles/ShopView.css';
 
-function ShopView() {
+interface ShopViewProps {
+  playerCoins: number;
+  playerLevel: number;
+  fruits: { [key: string]: number };
+  purchasedItemIds: string[];
+  onSellFruit: (fruitName: string, pricePerUnit: number) => void;
+  onSellAllFruits: () => void;
+  onPurchaseItem: (item: ShopItem) => void;
+}
+
+function ShopView({ 
+  playerCoins, 
+  playerLevel,
+  fruits, 
+  purchasedItemIds,
+  onSellFruit,
+  onSellAllFruits,
+  onPurchaseItem 
+}: ShopViewProps) {
+  
+  // Crear mapa de precios de frutas
+  const getFruitPrices = () => {
+    const prices: { [key: string]: number } = {};
+    Object.values(TaskType).forEach(type => {
+      const plantInfo = getPlantInfo(type);
+      prices[plantInfo.name] = plantInfo.fruitValue;
+    });
+    return prices;
+  };
+
+  const handleSellAll = () => {
+    onSellAllFruits();
+  };
+
   return (
     <div className="shop-view">
-      <h2>🏪 Tienda del Jardín</h2>
-      <div className="shop-placeholder">
-        <div className="placeholder-icon">🛒</div>
-        <h3>¡Bienvenido a la Tienda!</h3>
-        <p>Aquí podrás comprar con tus monedas:</p>
-        <div className="shop-categories">
-          <div className="category-card">
-            <span className="category-icon">🌱</span>
-            <h4>Semillas</h4>
-            <p>Nuevos tipos de plantas</p>
-          </div>
-          <div className="category-card">
-            <span className="category-icon">🪴</span>
-            <h4>Decoraciones</h4>
-            <p>Embellece tu jardín</p>
-          </div>
-          <div className="category-card">
-            <span className="category-icon">🪑</span>
-            <h4>Muebles</h4>
-            <p>Decora tu casa</p>
-          </div>
-          <div className="category-card">
-            <span className="category-icon">👔</span>
-            <h4>Outfits</h4>
-            <p>Viste a tu personaje</p>
-          </div>
-        </div>
-        <p className="coming-soon">Sistema de tienda próximamente</p>
+      <div className="shop-header">
+        <h2>🏪 Tienda del Jardín</h2>
+        <p className="shop-subtitle">Vende tus cosechas y compra mejoras para tu jardín</p>
       </div>
+
+      {/* Panel de inventario para vender frutas */}
+      <InventoryPanel
+        fruits={fruits}
+        onSellFruit={onSellFruit}
+        onSellAll={handleSellAll}
+      />
+
+      {/* Catálogo de items */}
+      <ShopCatalog
+        playerCoins={playerCoins}
+        playerLevel={playerLevel}
+        purchasedItemIds={purchasedItemIds}
+        onPurchase={onPurchaseItem}
+      />
     </div>
   );
 }

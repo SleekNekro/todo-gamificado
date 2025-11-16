@@ -1,11 +1,18 @@
 export interface PlayerInventory {
   coins: number;
   fruits: FruitInventory;
-  decoration: Decoration[];
+  purchasedItems: PurchasedItem[];
 }
 
 export interface FruitInventory {
   [plantName: string]: number;
+}
+
+export interface PurchasedItem {
+  shopItemId: string;
+  purchasedAt: Date;
+  placed: boolean;
+  position?: Position;
 }
 
 export interface Decoration {

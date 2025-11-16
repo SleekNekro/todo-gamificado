@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { Player } from "../types";
+import type { Player, PurchasedItem } from "../types";
 import { generateId } from "../utils/idGenerator";
 import useLocalStorage from "./useLocalStorage";
 
@@ -11,7 +11,7 @@ const DEFAULT_PLAYER: Player = {
   inventory: {
     coins: 0,
     fruits: {},
-    decoration: [],
+    purchasedItems: [],
   },
   gardenSize: 9,
   createdAt: new Date(),
@@ -94,38 +94,85 @@ function usePlayer() {
     [player.inventory.fruits, setPlayer]
   );
 
-  const addExperience = useCallback((amount:number)=>{
-    setPlayer(prev=>{
-        const newExp = prev.experience + amount
-        const expNeededForNextLevel = prev.level*100
+  const sellAllFruits = useCallback(
+    (fruitPrices: { [key: string]: number }) => {
+      let totalEarned = 0;
 
-        if (newExp>=expNeededForNextLevel) {
-            return{
-                ...prev,
-                experience:newExp - expNeededForNextLevel,
-                level: prev.level+1
-            }
+      Object.entries(player.inventory.fruits).forEach(
+        ([fruitName, quantity]) => {
+          const pricePerUnit = fruitPrices[fruitName] || 10;
+          totalEarned += quantity * pricePerUnit;
         }
-        return{
+      );
+      if (totalEarned > 0) {
+        setPlayer((prev) => ({
+          ...prev,
+          inventory: {
+            ...prev.inventory,
+            coins: prev.inventory.coins + totalEarned,
+            fruits: {},
+          },
+        }));
+      }
+      return totalEarned;
+    },
+    [player.inventory.fruits, setPlayer]
+  );
+
+  const addExperience = useCallback(
+    (amount: number) => {
+      setPlayer((prev) => {
+        const newExp = prev.experience + amount;
+        const expNeededForNextLevel = prev.level * 100;
+
+        if (newExp >= expNeededForNextLevel) {
+          return {
             ...prev,
-            experience:newExp
+            experience: newExp - expNeededForNextLevel,
+            level: prev.level + 1,
+          };
         }
-    })
-  },[setPlayer])
-  
-  const buyDecoration = useCallback((decoration: any) => {
-    if (spendCoins(decoration.price)) {
-      setPlayer(prev => ({
-        ...prev,
-        inventory: {
-          ...prev.inventory,
-          decorations: [...prev.inventory.decoration, { ...decoration, purchased: true }]
-        }
-      }));
-      return true;
-    }
-    return false;
-  }, [spendCoins, setPlayer]);
+        return {
+          ...prev,
+          experience: newExp,
+        };
+      });
+    },
+    [setPlayer]
+  );
+
+  const purchaseItem = useCallback(
+    (shopItemId: string, price: number): boolean => {
+      if (player.inventory.coins >= price) {
+        const newItem: PurchasedItem = {
+          shopItemId,
+          purchasedAt: new Date(),
+          placed: false,
+        };
+
+        setPlayer((prev) => ({
+          ...prev,
+          inventory: {
+            ...prev.inventory,
+            coins: prev.inventory.coins - price,
+            purchasedItems: [...prev.inventory.purchasedItems, newItem],
+          },
+        }));
+        return true;
+      }
+      return false
+    },
+    [player.inventory.coins, setPlayer]
+  );
+
+  const hasItem = useCallback(
+    (shopItemId: string): boolean => {
+      return player.inventory.purchasedItems.some(
+        (item) => item.shopItemId === shopItemId
+      );
+    },
+    [player.inventory.purchasedItems]
+  );
 
   return {
     player,
@@ -133,8 +180,10 @@ function usePlayer() {
     spendCoins,
     addFruit,
     sellFruit,
+    sellAllFruits,
     addExperience,
-    buyDecoration
+    purchaseItem,
+    hasItem,
   };
 }
 export default usePlayer;

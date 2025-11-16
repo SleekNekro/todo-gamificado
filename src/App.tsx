@@ -3,6 +3,7 @@ import type { Task } from './types';
 import { TaskType } from './types/taskTypes';
 import { PlantStage } from './types/task';
 import { View } from './types/navigation';
+import type { ShopItem } from './types/shop';
 import { generateId } from './utils/idGenerator';
 import { getPlantInfo } from './data/plants';
 import { findFreePlot, getMaxPlotsForLevel } from './utils/gardenUtils';
@@ -18,7 +19,16 @@ import './styles/App.css';
 function App() {
   const [currentView, setCurrentView] = useState<View>(View.GARDEN);
   const [tasks, setTasks] = useLocalStorage<Task[]>('garden-tasks', []);
-  const { player, addFruit, addExperience, addCoins } = usePlayer();
+  const { 
+    player, 
+    addFruit, 
+    addExperience, 
+    addCoins, 
+    sellFruit, 
+    sellAllFruits, 
+    purchaseItem, 
+    hasItem 
+  } = usePlayer();
 
   const addTask = (title: string, type: TaskType, description?: string) => {
     const maxPlots = getMaxPlotsForLevel(player.level);
@@ -47,7 +57,7 @@ function App() {
     };
     
     setTasks([...tasks, newTask]);
-    setCurrentView(View.GARDEN);
+  
   };
 
   const toggleTask = (id: string) => {
@@ -118,7 +128,6 @@ function App() {
     const plantInfo = getPlantInfo(task.type);
     
     addFruit(plantInfo.name, 1);
-    addCoins(plantInfo.fruitValue)
     const expGained = plantInfo.growthTime * 10;
     addExperience(expGained);
     
@@ -153,8 +162,43 @@ function App() {
     setTasks(tasks.filter(task => task.id !== id));
   };
 
+  // Función para vender frutas individuales
+  const handleSellFruit = (fruitName: string, pricePerUnit: number) => {
+    const earned = sellFruit(fruitName, pricePerUnit);
+    if (earned > 0) {
+      alert(`¡Vendiste todo tu ${fruitName} por ${earned} monedas! 💰`);
+    }
+  };
+
+  // Función para vender todas las frutas
+  const handleSellAllFruits = () => {
+    const fruitPrices: { [key: string]: number } = {};
+    Object.values(TaskType).forEach(type => {
+      const plantInfo = getPlantInfo(type);
+      fruitPrices[plantInfo.name] = plantInfo.fruitValue;
+    });
+    
+    const earned = sellAllFruits(fruitPrices);
+    if (earned > 0) {
+      alert(`¡Vendiste todas tus frutas por ${earned} monedas! 💰`);
+    }
+  };
+
+  // Función para comprar items
+  const handlePurchaseItem = (item: ShopItem) => {
+    const success = purchaseItem(item.id, item.price);
+    if (success) {
+      alert(`¡Compraste ${item.name}! 🎉\n${item.description}`);
+    } else {
+      alert('No tienes suficientes monedas 💰');
+    }
+  };
+
   const expForNextLevel = player.level * 100;
   const expProgress = (player.experience / expForNextLevel) * 100;
+
+  // IDs de items comprados
+  const purchasedItemIds = player.inventory.purchasedItems.map(item => item.shopItemId);
 
   return (
     <div className="App">
@@ -195,7 +239,17 @@ function App() {
           onDelete={deleteTask}
         />
       )}
-      {currentView === View.SHOP && <ShopView />}
+      {currentView === View.SHOP && (
+        <ShopView
+          playerCoins={player.inventory.coins}
+          playerLevel={player.level}
+          fruits={player.inventory.fruits}
+          purchasedItemIds={purchasedItemIds}
+          onSellFruit={handleSellFruit}
+          onSellAllFruits={handleSellAllFruits}
+          onPurchaseItem={handlePurchaseItem}
+        />
+      )}
     </div>
   );
 }
